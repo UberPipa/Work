@@ -1,12 +1,12 @@
 import pandas as pd
 from pandas import read_csv
 
-# with open('test.csv', encoding='utf-8') as array:
-#     for line in array:
-#         print(line.strip())
-
-array = read_csv("test.csv")
+df_csv = read_csv("test.csv")
+df = pd.DataFrame(df_csv)
 
 
 
-print(array)
+print(df.head())
+
+# with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
+#     print(df)
