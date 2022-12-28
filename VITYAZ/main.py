@@ -32,7 +32,7 @@ df["last_lat_on_camera"] = pd.to_numeric(df["last_lat_on_camera"])
 df["last_lat_on_camera"] = pd.to_numeric(df["last_lat_on_camera"])
 
 # сортировка массива по time_check
-df = df.sort_values(by='last_time_check_on_camera')
+df = df.sort_values(by='last_time_check_on_camera', na_position='first')
 
 # Удаление 1го попавшегося дубликата
 df = df.drop_duplicates(subset=['N_camera', "N_sostava"], keep='last')
@@ -49,17 +49,29 @@ with open('remont.txt') as file:
 # Проверяем вхождение ремонтных составов и удаляем их
 df = df[(df.N_sostava.isin(remont)) == False]
 
-#### Определение диапазона дат
+# #### Определение диапазона дат
+# # Вызываем функцию из модуля и выбираем дату
+# inputDate = (data_check())
+# # Конверируем строку в дату
+# inputDate = datetime.strptime(str(inputDate), '%Y-%m-%d').date()
+# # Текущая дата
+# today = date.today()
 
 
 
+test1 = '2022-06-06'
+test2 = '2023-06-06'
 
+if test1 > test2:
+     print('больше')
+else:
+     print('меньше')
 
 
 
 # вывод
-# with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
-#      print(df)
+with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
+     print(df)
 
 
 # Подсчёт уникальных вхождений
