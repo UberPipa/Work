@@ -20,14 +20,13 @@ def data_check():
 
     # Выдаём результат
     if res == True:
-        print("Дата подходит, выбрана: " + inputDate)
+        print("Дата выбрана!")
         start_date = inputDate
     else:
         print("Не правильная дата, введите заново")
         data_check()
     # Возвращаем переменную
     return inputDate
-
 
 
 

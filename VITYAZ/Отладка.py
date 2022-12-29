@@ -33,4 +33,5 @@ for i in all:
 # print(all)
 # print(df['N_sostava'])
 
+print(df.nunique())
 
