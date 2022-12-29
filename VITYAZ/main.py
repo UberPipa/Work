@@ -57,7 +57,7 @@ inputDate = datetime.strptime(str('2022-12-19'), '%Y-%m-%d').date()
 
 ############################################ Работа с данными
 # Ищем не доступные камеры
-full_out = df.query('last_time_check_on_camera < inputDate')
+
 
 
 # Новый df с составами у который проблемы с геоданными
@@ -90,8 +90,8 @@ del_col(geo_problem, 'last_time_check_on_camera')
 
 
 # вывод DF
-with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
-     print(full_out)
+# with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
+#      print(full_out)
 
 # with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
 #       print(geo_problem)
