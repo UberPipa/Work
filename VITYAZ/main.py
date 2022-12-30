@@ -27,7 +27,7 @@ df = df[['vendor', 'name_tram', 'N_sostava', 'N_camera', 'last_time_check_on_cam
 str_to_int(df, "N_sostava")
 str_to_int(df, "N_camera")
 str_to_int(df, "last_lat_on_camera")
-str_to_int(df, "last_lat_on_camera")
+str_to_int(df, "last_lon_on_camera")
 
 # сортировка массива
 sort(df, 'last_time_check_on_camera')
@@ -47,25 +47,30 @@ df = df[(df.N_sostava.isin(remont)) == False]
 
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
-#inputDate = (data_check())
-# Конверируем строку в дату
-#inputDate = datetime.strptime(str(inputDate), '%Y-%m-%d').date() !!!!!!!!! удалить после отладки
+# inputDate = (data_check())
+# Конверируем строку в дату и снова в строку
+# inputDate = str(datetime.strptime(str(inputDate), '%Y-%m-%d').date())
 # Текущая дата
 today = date.today()
-inputDate = datetime.strptime(str('2022-12-19'), '%Y-%m-%d').date()
+# inputDate = datetime.strptime(str('2022-12-19'), '%Y-%m-%d').date()
+inputDate = '2022-12-19'
 ############################################
 
 ############################################ Работа с данными
 # Ищем не доступные камеры
+# a = (df['last_time_check_on_camera'].isnull()) | (df['last_time_check_on_camera'] < inputDate)
+# a = df.loc[a]
 
+# a = (df['last_lat_on_camera'] == -90.000000)
+# a = df.loc[a]
 
 
 # Новый df с составами у который проблемы с геоданными
-geo_problem = df.query('(last_lat_on_camera==0 or last_lat_on_camera==90 or last_lat_on_camera==-90) or (last_lon_on_camera==0 or last_lon_on_camera==90 or last_lon_on_camera==-90)')
-# удоляем дубликаты и не нужные столбцы
-geo_problem = geo_problem.drop_duplicates(subset=["N_sostava"], keep='last')
-del_col(geo_problem, 'N_camera')
-del_col(geo_problem, 'last_time_check_on_camera')
+# geo_problem = df.query('(last_lat_on_camera==0 or last_lat_on_camera==90 or last_lat_on_camera==-90) or (last_lon_on_camera==0 or last_lon_on_camera==90 or last_lon_on_camera==-90)')
+# # удоляем дубликаты и не нужные столбцы
+# geo_problem = geo_problem.drop_duplicates(subset=["N_sostava"], keep='last')
+# del_col(geo_problem, 'N_camera')
+# del_col(geo_problem, 'last_time_check_on_camera')
 
 
 
@@ -94,7 +99,7 @@ del_col(geo_problem, 'last_time_check_on_camera')
 #      print(full_out)
 
 # with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
-#       print(geo_problem)
+#       print(df)
 
 
 

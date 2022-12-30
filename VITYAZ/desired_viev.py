@@ -11,7 +11,10 @@ def pars_col(df, name_new_col, num_split_index): # парсит столбец �
 
 def str_to_data(df, col): # Переделывает в datetime и и збавляемся от миллисекунд в last_time_check_on_camera
     df[col] = pd.to_datetime(df[col])
-    df[col] = df[col].dt.ceil('T')
+    df[col] = df[col].dt.ceil('T') # Альтернатива 1
+    # df[col] = df[col].astype("datetime64[ns]") # Альтернатива 2
+    # df[col] = df[col].dt.to_period("D") # Альтернатива 2
+
 
 def str_to_int(df, col): # меняет str на int
     df[col] = pd.to_numeric(df[col])
