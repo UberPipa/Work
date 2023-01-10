@@ -1,6 +1,7 @@
 from datetime import *
-import pandas as pd
 
+import numpy as np
+import pandas as pd
 
 def del_col(df, col): # удаляет столбец
     df.pop(col)
@@ -20,11 +21,19 @@ def str_to_int(df, col): # меняет str на int
     df[col] = df[col].astype(int)
 
 def float_to_int(df, col): # меняет float на int
-    df[col] = df[col].fillna(0)  # Меняем NaN на 0
-    df[col] = df[col].astype(int) # Делаем int
+    df[col] = pd.to_numeric(df[col].round(), errors='coerce').astype('Int64')
+    df[col] = df[col].replace({0: np.nan})
+    df[col] = df[col].replace({90: np.nan})
+    df[col] = df[col].replace({-90: np.nan})
+    # ПРЕДЫДУШИЙ ВАРИАНТ
+    # df[col] = df[col].fillna(0)  # Меняем NaN на 0
+    # df[col] = df[col].astype(int) # Делаем int
 
 def sort(df, col): # сортирует столбец
     df = df.sort_values(by=col, na_position='first')
 
-
-
+def all_count_cam(df): # Делает DF, где все составы без дублирований
+    df_сount_cam = df[['N_sostava', 'сount_cam']]
+    # удаляем дубликаты и не нужные столбцы
+    df_сount_cam = df.drop_duplicates(subset=["N_sostava"], keep='last')
+    return df_сount_cam
