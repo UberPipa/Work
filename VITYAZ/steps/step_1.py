@@ -9,12 +9,10 @@ def create_df(name_df):  # читает из CVS
     name_df = pd.DataFrame(name_df)
     return name_df
 
-def read_remont(): #  Читает и возвращает список ремонтных составов
-    remont = []
-    with open('./remont.txt') as file:
-        for i in file:
-            remont.append(int(i.strip()))
-    return remont
+def read_remont(): #  Читает и возвращает список ремонтных составов с вендорами
+    name_df = read_csv("./remont.txt", names=['rem_tram'], header=None)
+    name_df = pd.DataFrame(name_df)
+    return name_df
 
 
 

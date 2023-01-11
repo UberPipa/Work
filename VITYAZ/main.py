@@ -12,7 +12,7 @@ from VITYAZ.steps.step_55 import *
 
 # Step_1
 df = create_df('df') # Читаем и делаем df
-remont = read_remont() # Считывает и хранит ремонтные составы списком
+df_remont = read_remont() # Считывает и хранит ремонтные составы списком
 
 # Step_2
 del_arch(df) # Удаляет архивные по условию
@@ -35,6 +35,9 @@ df = df.sort_values(by=['N_sostava', 'N_camera']) # Двойная сортир�
 df_сount_cam = all_count_cam(df) # Делает df с общим количесвом составов без дублирования
 
 # Step_4
+count_remont = len(df_remont) # Количество ремонтных всего
+
+
 
 
 
@@ -75,15 +78,17 @@ inputDate = '2023-01-02'
 # print(step_3)
 
 
-##################
-print("*" * 150)
-with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
-      print(df)
-print("*" * 150)
-print(df.nunique())
-print("*" * 150)
-print(len(df))
-print("*" * 150)
-# Показывает тип данных
-#trable_tram = step_3.dtypes['last_lon_on_camera']
 
+
+def void(void):
+      print("*" * 150)
+      print("*" * 150)
+      with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
+            print(void)
+      print("*" * 150)
+      print(void.nunique())
+      print("*" * 150)
+      print(len(void))
+      print("*" * 150)
+
+void(df_remont)
