@@ -1,8 +1,7 @@
 from pandas import read_csv
-from VITYAZ.remont.remont import read_remont
 from VITYAZ.steps.step_1 import *
 from VITYAZ.steps.step_2 import *
-
+from VITYAZ.steps.step_3 import *
 
 from VITYAZ.steps.range_date import *
 from VITYAZ.steps.step_11 import *
@@ -17,49 +16,32 @@ remont = read_remont() # Считывает и хранит ремонтные �
 
 # Step_2
 del_arch(df) # Удаляет архивные по условию
+pars_col(df, 'vendor', 0) # Парсим
+pars_col(df, 'N_sostava', -2) # Парсим
+pars_col(df, 'N_camera', -1) # Парсим
+del_col(df, 'camera') # удаляет не нужный столбцы
+del_col(df, 'status') # удаляет не нужный столбцы
+del_col(df, 'РўРЎ') # удаляет не нужный столбцы
+str_to_data(df, 'last_time_check_on_camera') # Переделываем в datetime и избавляемся от миллисекунд в last_time_check_on_camera
+str_to_int(df, "N_sostava") # меняем на str на int
+str_to_int(df, "N_camera") # меняем на str на int
+float_to_int(df, "last_lat_on_camera") # меняет float на int, делает не угодные значения nan
+float_to_int(df, "last_lon_on_camera") # меняет float на int, делает не угодные значения nan
+df['сount_cam'] = df.groupby('N_sostava')['N_sostava'].transform('size') # Делаем флаг для cоставов с количесвом камер для каждого состава
+df = df[['vendor', 'N_sostava', 'N_camera', 'сount_cam', 'last_time_check_on_camera', 'last_lat_on_camera', 'last_lon_on_camera']] # упорядочеваем столбцы
+df = df.sort_values(by=['N_sostava', 'N_camera']) # Двойная сортировка массива по N_sostava затем N_camera
+
+# Step_3
+df_сount_cam = all_count_cam(df) # Делает df с общим количесвом составов без дублирования
+
+# Step_4
 
 
 
-############################################ Приводим в надлежащий вид
-# # Парсим столбец
-# pars_col(df, 'vendor', 0)
-# pars_col(df, 'name_tram', -3)
-# pars_col(df, 'N_sostava', -2)
-# pars_col(df, 'N_camera', -1)
-#
-# # Переделываем в datetime и избавляемся от миллисекунд в last_time_check_on_camera
-# str_to_data(df, 'last_time_check_on_camera')
-#
-# # удаляем не нужные столбцы
-# # del_col(df, 'camera')
-# # del_col(df, 'status')
-#
-# # упорядочеваем столбцы
-# df = df[['vendor', 'name_tram', 'N_sostava', 'N_camera', 'last_time_check_on_camera', 'last_lat_on_camera', 'last_lon_on_camera']]
-#
-# # меняем на str на int
-# str_to_int(df, "N_sostava")
-# str_to_int(df, "N_camera")
-#
-# # меняем на float на int
-# float_to_int(df, "last_lat_on_camera")
-# float_to_int(df, "last_lon_on_camera")
-#
 # # сортировка массива по одному столбцу
 # sort(df, 'last_time_check_on_camera')
 # # Удаление 1го попавшегося дубликата
 # df = df.drop_duplicates(subset=['N_camera', "N_sostava"], keep='last')
-#
-# # Двойная сортировка массива по N_sostava затем N_camera
-# df = df.sort_values(by=['N_sostava', 'N_camera'])
-#
-# # Делаем флаг для cоставов с количесвом камер для каждого состава
-# df['сount_cam'] = df.groupby('N_sostava')['N_sostava'].transform('size')
-#
-# # Считывает и хранит ремонтные составы
-# remont = read_remont()
-#
-# df_сount_cam = all_count_cam(df) # Делает df с общим количесвом составов без дублирования
 ############################################
 
 ############################################ Работа с датой
@@ -92,13 +74,16 @@ inputDate = '2023-01-02'
 # step_3 = full_trable_tram(trable_tram)
 # print(step_3)
 
+
 ##################
+print("*" * 150)
 with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
       print(df)
-
+print("*" * 150)
 print(df.nunique())
-
-
+print("*" * 150)
+print(len(df))
+print("*" * 150)
 # Показывает тип данных
 #trable_tram = step_3.dtypes['last_lon_on_camera']
 
