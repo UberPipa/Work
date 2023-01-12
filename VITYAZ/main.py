@@ -2,9 +2,13 @@ from pandas import read_csv
 from VITYAZ.steps.step_1 import *
 from VITYAZ.steps.step_2 import *
 from VITYAZ.steps.step_3 import *
-
+from VITYAZ.steps.step_4 import *
+from VITYAZ.steps.step_5 import *
 from VITYAZ.steps.range_date import *
 from VITYAZ.steps.step_55 import *
+pd.options.mode.chained_assignment = None #Выключает предупреждения
+
+inputDate = '2023-01-02'
 
 # Step_1
 df = create_df('df') # Читаем и делаем df
@@ -23,31 +27,34 @@ str_to_int(df, "N_sostava") # меняем на str на int
 str_to_int(df, "N_camera") # меняем на str на int
 float_to_int(df, "last_lat_on_camera") # меняет float на int, делает не угодные значения nan
 float_to_int(df, "last_lon_on_camera") # меняет float на int, делает не угодные значения nan
-df['сount_cam'] = df.groupby('N_sostava')['N_sostava'].transform('size') # Делаем флаг для cоставов с количесвом камер для каждого состава
-df = df[['vendor', 'N_sostava', 'N_camera', 'сount_cam', 'last_time_check_on_camera', 'last_lat_on_camera', 'last_lon_on_camera']] # упорядочеваем столбцы
+df['сount_cam'] = df.groupby('N_sostava')['N_sostava'].transform('size') # Делаем флаг с количесвом камер для cоставов с количесвом камер для каждого состава
+df = df[['vendor', 'N_sostava', 'N_camera', 'last_time_check_on_camera', 'last_lat_on_camera', 'last_lon_on_camera', 'сount_cam']] # упорядочеваем столбцы
 df = df.sort_values(by=['N_sostava', 'N_camera']) # Двойная сортировка массива по N_sostava затем N_camera
 
 # Step_3
-clean_df = clean_df(df) # Делает df с общим количесвом составов без дублирования
-count_df = len(clean_df) # Количество ремонтных всего
+clean_df_all, count_df  = clean_df(df) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 count_remont = len(df_remont) # Количество ремонтных всего
-df_remont = clean_df[(clean_df['N_sostava'].isin(df_remont['N_sostava'])) == True] # Хранит ремонтные составы, делается по чистому DF
+df_remont = clean_df_all[(clean_df_all['N_sostava'].isin(df_remont['N_sostava'])) == True] # Хранит ремонтные составы, делается по чистому DF
 df = df[(df['N_sostava'].isin(df_remont['N_sostava'])) == False] # Хранит все составы без ремонтных, удаляет ремонтные
 
 # Step_4
+df_all_bed_cam = df[(df['last_time_check_on_camera'].isnull()) | (df['last_time_check_on_camera'] < inputDate)]  # Получаем камеры, частично или полностью без детекций
+df_all_bed_tram, count_all_bed_tram = clean_df(df_all_bed_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+
+# Step_5
+df_full_all_bed_cam = real_flag(df_all_bed_cam) # Присваивает новые флаги с реальным количеством камер
+df_full_all_bed_cam = df_full_all_bed_cam.loc[df_full_all_bed_cam['сount_cam'] == df_full_all_bed_cam['real_сount_cam']]  # оставляем полностью не доступные
+df_full_all_bed_tram, count_full_all_bed_tram = clean_df(df_full_all_bed_cam)  # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+# Step_6
+df_bed_cam = df_all_bed_cam.loc[df_all_bed_cam['сount_cam'] != df_all_bed_cam['real_сount_cam']]  # Берём df_full_all_bed_cam с флагами камер и минусуем не доступные df_full_all_bed_tram
+df_bed_tram, count_bed_tram = clean_df(df_bed_cam)  # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
 
 
 
-
-
-
-
-# # сортировка массива по одному столбцу
-# sort(df, 'last_time_check_on_camera')
-# # Удаление 1го попавшегося дубликата
-# df = df.drop_duplicates(subset=['N_camera', "N_sostava"], keep='last')
-############################################
+parampam = df_bed_tram # Печатает
 
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
@@ -57,36 +64,16 @@ df = df[(df['N_sostava'].isin(df_remont['N_sostava'])) == False] # Хранит 
 # Текущая дата
 today = date.today()
 # inputDate = datetime.strptime(str('2022-12-19'), '%Y-%m-%d').date()
-inputDate = '2023-01-02'
 #inputDate = datetime.datetime.strptime(inputDate, '%Y-%m-%d') # На всякий случай если не будет робить
 ############################################
-
-############################################ Вывод данных
-# print('‼️Свежая статистика по трамваям Витязь ', '\n')
-#
-# step_1 = total_in_the_sphere(df_сount_cam) # вывод сколько всего в сфере трамваев - step_1
-# print(step_1)
-#
-# step_2 = count_rem(remont) # вывод сколько всего ремонтных - step_2
-# print(step_2)
-#
-# step_3 = all_good(df, remont, inputDate)
-# print(step_3)
-#
-# # step_4
-# trable_tram = trable_tram(df, remont, inputDate) # Получаем все трамваи с проблемами
-#
-# step_3 = full_trable_tram(trable_tram)
-# print(step_3)
-
-
-
-
 
 def void(void):
       print("*" * 150)
       print(f'🔸Всего заведено в Сферу: {count_df} шт. ')
       print(f'🛠Всего в ремонте: {count_remont} шт. ')
+      print(f'❌Частично или полностью без детекций: {count_all_bed_tram} шт. ')
+      print('*********   Полностью не робит - ' + str(count_full_all_bed_tram))
+      print('*********   Робит частично - ' + str(count_bed_tram))
       print("*" * 150)
       with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
             print(void)
@@ -96,8 +83,7 @@ def void(void):
       print(str(len(void)) + ' Len этого дерьма')
       print("*" * 150)
 
-void(df_remont)
+void(parampam)
 
 # df
 # df_remont
-#
