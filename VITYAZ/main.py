@@ -51,12 +51,21 @@ df_bed_cam = df_all_bed_cam.loc[df_all_bed_cam['сount_cam'] != df_all_bed_cam['
 df_bed_tram, count_bed_tram = clean_df(df_bed_cam)  # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
 # Step_7
-df_without_geo = df[(df['last_time_check_on_camera'] > inputDate)] # Сортировка в рамках недели
-# df_without_geo = df_without_geo[(df_without_geo['N_sostava'].isin(df_without_geo['N_sostava'])) == False] # Что то от чего то нужно отнять
+df_all_without_geo_cam = df[(df['last_time_check_on_camera'] > inputDate)] # Сортировка в рамках недели
+df_all_without_geo_cam = df_all_without_geo_cam[(df_all_without_geo_cam['N_sostava'].isin(df_all_bed_cam['N_sostava'])) == False] # Проверяем df_without_geo на вхождения из списка из (df_all_bed_cam) и удаляем составы, должны получиться почти все рабочие составы, нужно будет найти только составы без гео данных
+df_all_without_geo_cam = df_all_without_geo_cam[(df_all_without_geo_cam['last_lat_on_camera'].isnull()) | (df_all_without_geo_cam['last_lon_on_camera'].isnull())] # Находим трамваи без гео данных
+df_all_without_geo_cam = real_flag(df_all_without_geo_cam) # Присваивает новые флаги с реальным количеством камер
+full_df_all_without_geo_cam = df_all_without_geo_cam.loc[df_all_without_geo_cam['сount_cam'] == df_all_without_geo_cam['real_сount_cam']]  # Смотрим полностью без гео позиции
+full_df_without_geo_tram, count_without_geo_tram = clean_df(full_df_all_without_geo_cam)  # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+df_without_geo_cam = df_all_without_geo_cam.loc[df_all_without_geo_cam['сount_cam'] != df_all_without_geo_cam['real_сount_cam']] # Смотрим частично без гео позиции
+df_without_geo_tram, count_df_without_geo_tram = clean_df(df_without_geo_cam)  # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+# Step_8
 
 
 
-parampam = df_all_bed_cam     # Печатает
+
+parampam = df_without_geo_tram     # Печатает
 
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
@@ -76,6 +85,9 @@ def void(void):
       print(f'❌Частично или полностью без детекций: {count_all_bed_tram} шт. ')
       print('*********   Полностью не робит - ' + str(count_full_all_bed_tram))
       print('*********   Робит частично - ' + str(count_bed_tram))
+      print('*********')
+      print('*********   Полностью без гео позиции - ' + str(count_without_geo_tram))
+      print('*********   Частично без гео позиции - ' + str(count_df_without_geo_tram))
       print("*" * 150)
       with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
             print(void)
