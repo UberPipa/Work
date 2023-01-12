@@ -41,7 +41,6 @@ df = df[(df['N_sostava'].isin(df_remont['N_sostava'])) == False] # Хранит 
 df_all_bed_cam = df[(df['last_time_check_on_camera'].isnull()) | (df['last_time_check_on_camera'] < inputDate)]  # Получаем камеры, частично или полностью без детекций
 df_all_bed_tram, count_all_bed_tram = clean_df(df_all_bed_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
-
 # Step_5
 df_full_all_bed_cam = real_flag(df_all_bed_cam) # Присваивает новые флаги с реальным количеством камер
 df_full_all_bed_cam = df_full_all_bed_cam.loc[df_full_all_bed_cam['сount_cam'] == df_full_all_bed_cam['real_сount_cam']]  # оставляем полностью не доступные
@@ -51,10 +50,13 @@ df_full_all_bed_tram, count_full_all_bed_tram = clean_df(df_full_all_bed_cam)  #
 df_bed_cam = df_all_bed_cam.loc[df_all_bed_cam['сount_cam'] != df_all_bed_cam['real_сount_cam']]  # Берём df_full_all_bed_cam с флагами камер и минусуем не доступные df_full_all_bed_tram
 df_bed_tram, count_bed_tram = clean_df(df_bed_cam)  # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
+# Step_7
+df_without_geo = df[(df['last_time_check_on_camera'] > inputDate)] # Сортировка в рамках недели
+# df_without_geo = df_without_geo[(df_without_geo['N_sostava'].isin(df_without_geo['N_sostava'])) == False] # Что то от чего то нужно отнять
 
 
 
-parampam = df_bed_tram # Печатает
+parampam = df_all_bed_cam     # Печатает
 
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
