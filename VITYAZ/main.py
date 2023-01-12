@@ -4,10 +4,6 @@ from VITYAZ.steps.step_2 import *
 from VITYAZ.steps.step_3 import *
 
 from VITYAZ.steps.range_date import *
-from VITYAZ.steps.step_11 import *
-from VITYAZ.steps.step_22 import *
-from VITYAZ.steps.step_33 import *
-from VITYAZ.steps.step_44 import *
 from VITYAZ.steps.step_55 import *
 
 # Step_1
@@ -32,10 +28,16 @@ df = df[['vendor', 'N_sostava', 'N_camera', 'сount_cam', 'last_time_check_on_ca
 df = df.sort_values(by=['N_sostava', 'N_camera']) # Двойная сортировка массива по N_sostava затем N_camera
 
 # Step_3
-df_сount_cam = all_count_cam(df) # Делает df с общим количесвом составов без дублирования
+clean_df = clean_df(df) # Делает df с общим количесвом составов без дублирования
+count_df = len(clean_df) # Количество ремонтных всего
+count_remont = len(df_remont) # Количество ремонтных всего
+df_remont = clean_df[(clean_df['N_sostava'].isin(df_remont['N_sostava'])) == True] # Хранит ремонтные составы, делается по чистому DF
+df = df[(df['N_sostava'].isin(df_remont['N_sostava'])) == False] # Хранит все составы без ремонтных, удаляет ремонтные
 
 # Step_4
-count_remont = len(df_remont) # Количество ремонтных всего
+
+
+
 
 
 
@@ -80,15 +82,22 @@ inputDate = '2023-01-02'
 
 
 
+
 def void(void):
       print("*" * 150)
+      print(f'🔸Всего заведено в Сферу: {count_df} шт. ')
+      print(f'🛠Всего в ремонте: {count_remont} шт. ')
       print("*" * 150)
       with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
             print(void)
       print("*" * 150)
       print(void.nunique())
       print("*" * 150)
-      print(len(void))
+      print(str(len(void)) + ' Len этого дерьма')
       print("*" * 150)
 
 void(df_remont)
+
+# df
+# df_remont
+#

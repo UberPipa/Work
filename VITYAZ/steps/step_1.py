@@ -10,7 +10,7 @@ def create_df(name_df):  # читает из CVS
     return name_df
 
 def read_remont(): #  Читает и возвращает список ремонтных составов с вендорами
-    name_df = read_csv("./remont.txt", names=['rem_tram'], header=None)
+    name_df = read_csv("./remont.txt", names=['N_sostava'], header=None)
     name_df = pd.DataFrame(name_df)
     return name_df
 
