@@ -106,6 +106,14 @@ tv_df_bed_cam = df_bed_cam[(df_bed_cam['vendor'] == 'tv')] # Все состав
 tv_df_bed_tram, count_tv_df_bed_tram = clean_df(tv_df_bed_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
 
+list_vl_df_bed_cam = list(vl_df_bed_tram['N_sostava'])  # Делаем список с составами
+
+# for i in vl_df_bed_tram[['N_sostava']].iteritems():
+#       print(i)
+
+
+#print(list_vl_df_bed_cam[])
+
 
 
 
