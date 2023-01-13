@@ -5,6 +5,7 @@ from VITYAZ.steps.step_3 import *
 from VITYAZ.steps.step_4 import *
 from VITYAZ.steps.step_5 import *
 from VITYAZ.steps.step_8 import *
+from VITYAZ.steps.step_11 import *
 from VITYAZ.steps.range_date import *
 from VITYAZ.steps.step_55 import *
 pd.options.mode.chained_assignment = None #Выключает предупреждения
@@ -68,10 +69,47 @@ df_full_good_cam = df_without_remont[~(df_without_remont['N_sostava'].isin(temp[
 df_full_good_tram, count_df_full_good_tram = clean_df(df_full_good_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
 # Step_9
-vl_df = df_without_remont[(df_without_remont['vendor'] == 'vl')] # Исключаем косячные из df
+vl_df = df[(df['vendor'] == 'vl')] # Все составы vl
+all_vl_df_tram, count_all_vl_df_tram = clean_df(vl_df) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+tv_df = df[(df['vendor'] == 'tv')] # Все составы tv
+all_tv_df_tram, count_all_tv_df_tram = clean_df(tv_df) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+# Step_10
+vl_df_remont = df_remont[(df_remont['vendor'] == 'vl')] # Все составы vl
+temp, count_vl_df_remont = clean_df(vl_df_remont) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+tv_df_remont = df_remont[(df_remont['vendor'] == 'tv')] # Все составы vt
+temp, count_tv_df_remont = clean_df(tv_df_remont) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+# Step_11
+vl_df_full_all_bed_tram = df_full_all_bed_tram[(df_full_all_bed_tram['vendor'] == 'vl')] # Все составы vl
+temp, count_vl_df_full_all_bed_tram = clean_df(vl_df_full_all_bed_tram) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+vl_str_full_all_bed_tram = col_in_str(vl_df_full_all_bed_tram) # Переделываем столбец в строку
+tv_df_full_all_bed_tram = df_full_all_bed_tram[(df_full_all_bed_tram['vendor'] == 'tv')] # Все составы tv
+temp, count_tv_df_full_all_bed_tram= clean_df(tv_df_full_all_bed_tram) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+tv_str_full_all_bed_tram = col_in_str(tv_df_full_all_bed_tram) # Переделываем столбец в строку
+
+# step_12
+df_available_all_cam = df_without_remont[~(df_without_remont['N_sostava'].isin(df_full_all_bed_cam['N_sostava']))]# Ищем доступные Все
+df_available_all_tram, count_df_available_all_tram = clean_df(df_available_all_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+# step_13
+vl_df_available_all_cam = df_available_all_cam[(df_available_all_cam['vendor'] == 'vl')] # Все составы vl
+vl_df_available_all_tram, count_vl_df_available_all_tram = clean_df(vl_df_available_all_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+tv_df_available_all_cam = df_available_all_cam[(df_available_all_cam['vendor'] == 'tv')] # Все составы tv
+tv_df_available_all_tram, count_tv_df_available_all_tram = clean_df(tv_df_available_all_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+
+# step_14
+vl_df_bed_cam = df_bed_cam[(df_bed_cam['vendor'] == 'vl')] # Все составы vl
+vl_df_bed_tram, count_vl_df_bed_tram = clean_df(vl_df_bed_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+tv_df_bed_cam = df_bed_cam[(df_bed_cam['vendor'] == 'tv')] # Все составы tv
+tv_df_bed_tram, count_tv_df_bed_tram = clean_df(tv_df_bed_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
 
-parampam = df     # Печатает
+
+
+
+parampam = vl_df_bed_cam     # Печатает
 
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
@@ -89,11 +127,31 @@ def void(void):
       print(f'🔸Всего заведено в Сферу: {count_df} шт. ')
       print(f'🛠Всего в ремонте: {count_remont} шт. ')
       print(f'❌Частично или полностью без детекций: {count_all_bed_tram} шт. ')
+      print(f'✅Полностью рабочие составы: {count_df_full_good_tram} шт. ')
+      print(' ')
+
+      print('‼️VisionLab')
+      print(f'🔸Всего: {count_all_vl_df_tram} шт. ')
+      print(f'🛠В ремонте: {count_vl_df_remont} шт. ')
+      print(f'❌Не доступны: {count_vl_df_full_all_bed_tram} шт. : {vl_str_full_all_bed_tram}.')
+      print(f'✅Доступны: {count_vl_df_available_all_tram} шт. – из них: ')
+      print(f'**** ⚠️Детекции свежие не со всех камер: {count_vl_df_bed_tram} шт. : ')
+
+      print(' ')
+      print('‼️Tevian')
+      print(f'🔸Всего: {count_all_tv_df_tram} шт. ')
+      print(f'🛠В ремонте: {count_tv_df_remont} шт. ')
+      print(f'❌Не доступны: {count_tv_df_full_all_bed_tram} шт. : {tv_str_full_all_bed_tram}.')
+      print(f'✅Доступны: {count_tv_df_available_all_tram} шт. – из них: ')
+      print(f'**** ⚠️Детекции свежие не со всех камер: {count_tv_df_bed_tram} шт. : ')
+
+
+      print(' ')
       print('*********   Полностью не робит - ' + str(count_full_all_bed_tram))
       print('*********   Робит частично - ' + str(count_bed_tram))
       print('*********   Полностью без гео позиции - ' + str(count_without_geo_tram))
       print('*********   Частично без гео позиции - ' + str(count_df_without_geo_tram))
-      print(f'✅Полностью рабочие составы: {count_df_full_good_tram} шт. ')
+      print(' ')
       print("*" * 150)
       with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
             print(void)
