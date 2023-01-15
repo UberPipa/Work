@@ -110,12 +110,15 @@ tv_df_bed_tram, count_tv_df_bed_tram = clean_df(tv_df_bed_cam) # Делает ч
 str_tv_bed_tram_plus_cam = col_in_str_plus_cam(tv_df_bed_tram, tv_df_bed_cam) # Возвращает строку со списком составов и камер
 
 # step_15
-
-
+# df_full_good_tram
+vl_df_full_good_tram = df_full_good_tram[(df_full_good_tram['vendor'] == 'vl')] # Все составы vl
+temp, count_vl_df_full_good_tram = clean_df(vl_df_full_good_tram) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+tv_df_full_good_tram = df_full_good_tram[(df_full_good_tram['vendor'] == 'tv')] # Все составы tv
+temp, count_tv_df_full_good_tram = clean_df(tv_df_full_good_tram) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 
 
 #parampam = tabulate(vl_df_bed_cam, headers='keys', tablefmt='psql', showindex=False)     # Печатает
-parampam = df_bed_cam
+parampam = tv_df_full_good_tram
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
 # inputDate = (data_check())
@@ -141,6 +144,9 @@ def void(void):
       print(f'❌Не доступны: {count_vl_df_full_all_bed_tram} шт. : {vl_str_full_all_bed_tram}.')
       print(f'✅Доступны: {count_vl_df_available_all_tram} шт. – из них: ')
       print(f'**** ⚠️Детекции свежие не со всех камер: {count_vl_df_bed_tram} шт. : {str_vl_bed_tram_plus_cam}')
+      print(f'**** ⚠️Нет геопозиции:  шт. : ')
+      print(f'**** ✅Полностью рабочие составы: {count_vl_df_full_good_tram}  шт.')
+
 
       print(' ')
       print('‼️Tevian')
@@ -149,6 +155,8 @@ def void(void):
       print(f'❌Не доступны: {count_tv_df_full_all_bed_tram} шт. : {tv_str_full_all_bed_tram}.')
       print(f'✅Доступны: {count_tv_df_available_all_tram} шт. – из них: ')
       print(f'**** ⚠️Детекции свежие не со всех камер: {count_tv_df_bed_tram} шт. : {str_tv_bed_tram_plus_cam}')
+      print(f'**** ⚠️Нет геопозиции:  шт. : ')
+      print(f'**** ✅Полностью рабочие составы: {count_tv_df_full_good_tram}  шт.')
 
 
       print(' ')
