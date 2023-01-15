@@ -6,8 +6,10 @@ from VITYAZ.steps.step_4 import *
 from VITYAZ.steps.step_5 import *
 from VITYAZ.steps.step_8 import *
 from VITYAZ.steps.step_11 import *
+from VITYAZ.steps.step_14 import *
 from VITYAZ.steps.range_date import *
 from VITYAZ.steps.step_55 import *
+from tabulate import tabulate
 pd.options.mode.chained_assignment = None #Выключает предупреждения
 
 inputDate = '2023-01-02'
@@ -102,23 +104,18 @@ tv_df_available_all_tram, count_tv_df_available_all_tram = clean_df(tv_df_availa
 # step_14
 vl_df_bed_cam = df_bed_cam[(df_bed_cam['vendor'] == 'vl')] # Все составы vl
 vl_df_bed_tram, count_vl_df_bed_tram = clean_df(vl_df_bed_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+str_vl_bed_tram_plus_cam = col_in_str_plus_cam(vl_df_bed_tram, vl_df_bed_cam) # Возвращает строку со списком составов и камер
 tv_df_bed_cam = df_bed_cam[(df_bed_cam['vendor'] == 'tv')] # Все составы tv
 tv_df_bed_tram, count_tv_df_bed_tram = clean_df(tv_df_bed_cam) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+str_tv_bed_tram_plus_cam = col_in_str_plus_cam(tv_df_bed_tram, tv_df_bed_cam) # Возвращает строку со списком составов и камер
 
-
-list_vl_df_bed_cam = list(vl_df_bed_tram['N_sostava'])  # Делаем список с составами
-
-# for i in vl_df_bed_tram[['N_sostava']].iteritems():
-#       print(i)
-
-
-#print(list_vl_df_bed_cam[])
+# step_15
 
 
 
 
-parampam = vl_df_bed_cam     # Печатает
-
+#parampam = tabulate(vl_df_bed_cam, headers='keys', tablefmt='psql', showindex=False)     # Печатает
+parampam = df_bed_cam
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
 # inputDate = (data_check())
@@ -143,7 +140,7 @@ def void(void):
       print(f'🛠В ремонте: {count_vl_df_remont} шт. ')
       print(f'❌Не доступны: {count_vl_df_full_all_bed_tram} шт. : {vl_str_full_all_bed_tram}.')
       print(f'✅Доступны: {count_vl_df_available_all_tram} шт. – из них: ')
-      print(f'**** ⚠️Детекции свежие не со всех камер: {count_vl_df_bed_tram} шт. : ')
+      print(f'**** ⚠️Детекции свежие не со всех камер: {count_vl_df_bed_tram} шт. : {str_vl_bed_tram_plus_cam}')
 
       print(' ')
       print('‼️Tevian')
@@ -151,7 +148,7 @@ def void(void):
       print(f'🛠В ремонте: {count_tv_df_remont} шт. ')
       print(f'❌Не доступны: {count_tv_df_full_all_bed_tram} шт. : {tv_str_full_all_bed_tram}.')
       print(f'✅Доступны: {count_tv_df_available_all_tram} шт. – из них: ')
-      print(f'**** ⚠️Детекции свежие не со всех камер: {count_tv_df_bed_tram} шт. : ')
+      print(f'**** ⚠️Детекции свежие не со всех камер: {count_tv_df_bed_tram} шт. : {str_tv_bed_tram_plus_cam}')
 
 
       print(' ')
