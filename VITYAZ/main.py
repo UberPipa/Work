@@ -9,7 +9,7 @@ from VITYAZ.steps.step_11 import *
 from VITYAZ.steps.step_14 import *
 from VITYAZ.steps.range_date import *
 from VITYAZ.steps.step_55 import *
-from tabulate import tabulate
+
 pd.options.mode.chained_assignment = None #Выключает предупреждения
 
 inputDate = '2023-01-02'
@@ -36,7 +36,7 @@ df = df[['vendor', 'N_sostava', 'N_camera', 'last_time_check_on_camera', 'last_l
 df = df.sort_values(by=['N_sostava', 'N_camera']) # Двойная сортировка массива по N_sostava затем N_camera
 
 # Step_3
-clean_df_all, count_df  = clean_df(df) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
+clean_df_all, count_df = clean_df(df) # Делает чистый df без дублирования и считает его длинну, возвращает в 2 переменные
 count_remont = len(df_remont) # Количество ремонтных всего
 df_remont = clean_df_all[(clean_df_all['N_sostava'].isin(df_remont['N_sostava'])) == True] # Хранит ремонтные составы, делается по чистому DF
 df_without_remont = df[(df['N_sostava'].isin(df_remont['N_sostava'])) == False] # Хранит все составы без ремонтных, удаляет ремонтные
@@ -118,7 +118,7 @@ temp, count_tv_df_full_good_tram = clean_df(tv_df_full_good_tram) # Делает
 
 
 #parampam = tabulate(vl_df_bed_cam, headers='keys', tablefmt='psql', showindex=False)     # Печатает
-parampam = tv_df_full_good_tram
+parampam = df_remont
 ############################################ Работа с датой
 # Вызываем функцию из модуля и выбираем дату
 # inputDate = (data_check())
